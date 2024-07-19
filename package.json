@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "papaparse": "^5.4.1",
+    "use-dark-mode": "^2.3.1"
+  }
+}
