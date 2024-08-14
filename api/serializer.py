@@ -78,7 +78,15 @@ class CalificacionSerializer(serializers.ModelSerializer):
 #Esto lo hize yo
 class AsistenciaSerializer(serializers.ModelSerializer):
     materia_nrc = serializers.SlugRelatedField(slug_field='nrc', queryset=Clase2.objects.all())
+    matricula = serializers.PrimaryKeyRelatedField(queryset=Alumno.objects.all())
 
     class Meta:
         model = Asistencia
         fields = ['id_asistencia', 'matricula', 'materia_nrc', 'fecha']
+
+    class AsistenciaSerializer(serializers.ModelSerializer):
+        materia_nrc = serializers.PrimaryKeyRelatedField(queryset=Clase2.objects.all())  # Asegúrate de que use PrimaryKeyRelatedField o un campo similar
+
+        class Meta:
+            model = Asistencia
+            fields = ['id_asistencia', 'matricula', 'materia_nrc', 'fecha']

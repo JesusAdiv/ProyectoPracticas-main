@@ -272,22 +272,24 @@ class CalificacionViewSet(viewsets.ModelViewSet):
 class AsistenciaViewSet(viewsets.ModelViewSet):
     queryset = Asistencia.objects.all()
     serializer_class = AsistenciaSerializer
-    
-    #AQUI VAN LAS APIS
-    @action(detail=False, methods=['post'])
-    def registrar_asistencia(self, request):
-        matricula = request.data.get('matricula')
-        materia_nrc = request.data.get('materia_nrc')
 
-        if not matricula or not materia_nrc:
-            return Response({"error": "Se requiere matricula y materia_nrc."}, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        # Crear una nueva instancia de Asistencia
-        asistencia = Asistencia.objects.create(
-            matricula=matricula,
-            materia_nrc=Clase2.objects.get(nrc=materia_nrc),
-            fecha=timezone.now().date()  # Guardar la fecha actual
-        )
+        # Validar la inscripción
+        materia_nrc = serializer.validated_data['materia_nrc']
+        matricula = serializer.validated_data['matricula']
 
-        serializer = self.get_serializer(asistencia)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        inscripcion = Inscripcion.objects.filter(alumno=matricula, clase=materia_nrc).first()
+
+        if not inscripcion or inscripcion.estado != 'ACTIVA':
+            return Response(
+                {"detail": f"El alumno con matrícula {matricula} no está inscrito en la clase con NRC {materia_nrc} o no tiene una inscripción activa."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Guardar la asistencia si todo está bien
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
