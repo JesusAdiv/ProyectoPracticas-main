@@ -90,7 +90,7 @@ class Asistencia(models.Model):
     id_asistencia = models.AutoField(primary_key=True)
     matricula = models.CharField(max_length=20)
     materia_nrc = models.ForeignKey(Clase2, on_delete=models.CASCADE, to_field='nrc', db_column='materia_nrc')
-    fecha = models.DateField()
+    fecha = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f"Asistencia {self.id_asistencia} - {self.matricula} - {self.fecha}"

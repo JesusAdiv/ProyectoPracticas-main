@@ -9,6 +9,7 @@ import smtplib
 from email.message import EmailMessage
 import random
 import string
+from django.utils import timezone
 
 def generarCodigo(tamano:int):
     Characters=string.ascii_letters + "1234567890."
@@ -271,5 +272,22 @@ class CalificacionViewSet(viewsets.ModelViewSet):
 class AsistenciaViewSet(viewsets.ModelViewSet):
     queryset = Asistencia.objects.all()
     serializer_class = AsistenciaSerializer
-    #AQUI VAN LAS APIS
     
+    #AQUI VAN LAS APIS
+    @action(detail=False, methods=['post'])
+    def registrar_asistencia(self, request):
+        matricula = request.data.get('matricula')
+        materia_nrc = request.data.get('materia_nrc')
+
+        if not matricula or not materia_nrc:
+            return Response({"error": "Se requiere matricula y materia_nrc."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Crear una nueva instancia de Asistencia
+        asistencia = Asistencia.objects.create(
+            matricula=matricula,
+            materia_nrc=Clase2.objects.get(nrc=materia_nrc),
+            fecha=timezone.now().date()  # Guardar la fecha actual
+        )
+
+        serializer = self.get_serializer(asistencia)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
