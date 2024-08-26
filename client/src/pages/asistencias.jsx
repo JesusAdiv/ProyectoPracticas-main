@@ -1,8 +1,9 @@
 import React, { useContext, useState, useEffect } from "react";
-import { NavContext } from "../layouts/layoutProfesor";
+import { NavContext, claseContext } from "../layouts/layoutProfesor";
 
 const Asistencias = () => {
-  const { showNav, shownav } = useContext(NavContext);
+  const { showNav } = useContext(NavContext);
+  const { dataClase } = useContext(claseContext);
   const [matricula, setMatricula] = useState("");
 
   useEffect(() => {
@@ -10,12 +11,30 @@ const Asistencias = () => {
   }, []);
 
   const handleGuardar = () => {
-    // Aquí puedes agregar la lógica para guardar la matrícula
-    console.log("Matrícula guardada:", matricula);
+    const nrc_clase = dataClase.nrc;
+
+    const data = {
+      matricula: matricula,
+      materia_nrc: nrc_clase
+    };
+
+    fetch("http://127.0.0.1:8000/api/Asistencia/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Asistencia registrada:", data);
+    })
+    .catch(error => {
+      console.error("Error:", error);
+    });
   };
 
   const handleGenerarQR = () => {
-    // Aquí puedes agregar la lógica para generar el código QR
     console.log("Generando código QR para:", matricula);
   };
 
