@@ -57,11 +57,10 @@ const Asistencias = () => {
 
   return (
     <div className="items-center text-center mt-10">
-      <i className="pi pi-hammer" style={{ fontSize: '50px' }} />
       <h2 className="text-2xl font-bold">Sección de Asistencias</h2>
 
       <div className="mt-4">
-        <label htmlFor="matricula" className="block text-xl font-medium text-gray-700">
+        <label htmlFor="matricula" className="block text-xl font-medium text-white">
           Matrícula:
         </label>
         <input
@@ -69,7 +68,7 @@ const Asistencias = () => {
           id="matricula"
           value={matricula}
           onChange={(e) => setMatricula(e.target.value)} // Permite la entrada manual
-          className="mt-1 p-2 border border-gray-300 rounded"
+          className="mt-1 p-2 border border-gray-300 rounded text-black"
           placeholder="Ingresa la matrícula"
         />
       </div>
@@ -81,17 +80,19 @@ const Asistencias = () => {
         >
           Guardar
         </button>
-        <div className="mt-4">
-          <QRScanner onScan={handleScan} />
-        </div>
       </div>
 
       {/* Mostrar el mensaje debajo del botón */}
       {mensaje && (
-        <div className="mt-4 p-2 border border-red-500 rounded text-red-500">
-          {mensaje}
-        </div>
+        <div className="mt-4 p-2 border border-white rounded text-red-500 w-11/12 sm:w-7/12 md:w-7/12 lg:w-7/12 xl:w-7/12 mx-auto">
+        {mensaje}
+      </div>
+      
       )}
+
+<div className="mt-4 w-11/12 md:w-7/12 lg:w-7/12 mx-auto">
+  <QRScanner onScan={handleScan} />
+</div>
     </div>
   );
 };
