@@ -13,6 +13,7 @@
     "@nextui-org/date-picker": "^2.0.7",
     "@nextui-org/react": "^2.3.6",
     "@tanstack/react-table": "^8.13.2",
+    "@zxing/library": "^0.21.3",
     "axios": "^1.6.7",
     "framer-motion": "^11.1.9",
     "jotai": "^2.8.3",
